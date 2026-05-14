@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LogIn, LogOut, Menu, User } from 'lucide-react';
 import { auth } from '../firebase';
 import { signInWithRedirect, GoogleAuthProvider, signOut } from 'firebase/auth';
@@ -24,10 +24,29 @@ function getAuthErrorMessage(error: unknown) {
 }
 
 export function Topbar() {
-  const user = useAuthUser();
+  const { user, loading, error, clearError } = useAuthUser();
   const { toggleMobileSidebar } = useAppStore();
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    setAuthMessage(getAuthErrorMessage(error));
+    setIsAuthenticating(false);
+  }, [error]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    clearError();
+    setAuthMessage(null);
+    setIsAuthenticating(false);
+  }, [clearError, user]);
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -97,11 +116,11 @@ export function Topbar() {
         ) : (
           <button 
             onClick={handleLogin}
-            disabled={isAuthenticating}
+            disabled={isAuthenticating || loading}
             className="flex items-center gap-2 rounded-md bg-[var(--primary)] px-3 py-2 text-sm font-medium text-[var(--bg)] transition-opacity hover:opacity-90 sm:px-4"
           >
             <LogIn className="w-4 h-4" />
-            {isAuthenticating ? 'Abriendo...' : 'Acceder / Registrarse'}
+            {loading ? 'Verificando...' : isAuthenticating ? 'Abriendo...' : 'Acceder / Registrarse'}
           </button>
         )}
       </div>

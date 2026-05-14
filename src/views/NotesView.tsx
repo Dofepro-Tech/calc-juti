@@ -29,7 +29,7 @@ export function NotesView() {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const user = useAuthUser();
+  const { user, loading: authLoading } = useAuthUser();
 
   useEffect(() => {
     if (user) {
@@ -120,7 +120,12 @@ export function NotesView() {
     <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-6 h-[calc(100vh-8rem)]">
       {/* Editor Panel */}
       <div className="md:w-1/2 flex flex-col space-y-4 bg-[var(--surface)] p-6 rounded-3xl shadow-sm border border-[var(--border)] relative">
-        {!user && (
+        {authLoading ? (
+          <div className="absolute inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center rounded-3xl">
+            <h3 className="font-serif font-bold text-xl mb-2 text-[var(--primary)]">Verificando acceso</h3>
+            <p className="opacity-70">Esperando la respuesta de tu sesión de Google...</p>
+          </div>
+        ) : !user && (
           <div className="absolute inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center rounded-3xl">
             <h3 className="font-serif font-bold text-xl mb-2 text-[var(--primary)]">Acceso Requerido</h3>
             <p className="opacity-70">Inicia sesión en la parte superior para crear y sincronizar tus notas.</p>
@@ -179,8 +184,8 @@ export function NotesView() {
              notes.map(note => (
                <div key={note.id} className="group relative bg-[var(--surface)] p-4 rounded-2xl border border-[var(--border)] hover:border-[var(--primary)] transition-colors">
                   <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => editNote(note)} className="p-1.5 text-gray-500 hover:text-[var(--primary)] rounded-full hover:bg-[var(--surface-hover)]"><Edit2 className="w-4 h-4" /></button>
-                    <button onClick={() => deleteNote(note.id)} className="p-1.5 text-red-500 rounded-full hover:bg-[var(--surface-hover)]"><X className="w-4 h-4" /></button>
+                    <button type="button" title="Editar nota" onClick={() => editNote(note)} className="p-1.5 text-gray-500 hover:text-[var(--primary)] rounded-full hover:bg-[var(--surface-hover)]"><Edit2 className="w-4 h-4" /></button>
+                    <button type="button" title="Eliminar nota" onClick={() => deleteNote(note.id)} className="p-1.5 text-red-500 rounded-full hover:bg-[var(--surface-hover)]"><X className="w-4 h-4" /></button>
                   </div>
                   <h4 className="font-bold mb-1 pr-10 truncate font-serif">{note.title}</h4>
                   <p className="text-sm opacity-70 line-clamp-3 whitespace-pre-wrap">{note.content}</p>

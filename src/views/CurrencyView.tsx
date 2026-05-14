@@ -107,7 +107,7 @@ export function CurrencyView() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [quickSwapIdx, setQuickSwapIdx] = useState(0);
   const [highlightedPair, setHighlightedPair] = useState<string | null>(null);
-  const user = useAuthUser();
+  const { user } = useAuthUser();
   
   const { showCurrencyNames, precision } = useAppStore();
 
