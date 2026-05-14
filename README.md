@@ -39,18 +39,20 @@ Si el dominio no está en esa lista, Firebase devolverá auth/unauthorized-domai
 
 ## Despliegue en GitHub Pages
 
-El proyecto ya queda preparado para publicarse como sitio estático en GitHub Pages.
+El proyecto ya queda preparado para publicarse como sitio estático en GitHub Pages desde la carpeta docs.
 
-1. Sube el repositorio a GitHub.
-2. Deja la rama principal como main.
-3. En Settings > Pages selecciona GitHub Actions como fuente.
-4. Haz push a main y el workflow publicará la carpeta dist.
+1. Ejecuta npm run build:pages.
+2. Haz commit de los cambios, incluida la carpeta docs.
+3. Haz push a la rama main.
+4. En Settings > Pages selecciona Deploy from a branch.
+5. Elige main y la carpeta /docs.
 
 Notas:
 
 - En GitHub Pages la app usa hash routing para evitar errores 404 al recargar rutas internas.
-- La base pública se calcula con el nombre del repositorio durante el build del workflow.
+- El script build:pages genera docs con la base pública del repositorio y crea .nojekyll.
 - GitHub Pages sirve bien el frontend, pero no es un lugar seguro para guardar claves privadas.
+- La URL pública actual de este proyecto es https://dofepro-tech.github.io/calc-juti/.
 
 ## Despliegue en Render
 
@@ -97,6 +99,7 @@ La forma correcta es montar ese proxy en Render como Web Service y que el fronte
 
 - npm run dev
 - npm run build
+- npm run build:pages
 - npm run preview
 - npm run lint
 
