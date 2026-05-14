@@ -1,17 +1,40 @@
 import React from 'react';
+import { X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const basicExamples = ['2+2', '10/4', '7*8', '2^3'];
 const scientificExamples = ['sin(pi/2)', 'cos(0)', 'tan(pi/4)', 'log(100)', 'ln(e)', 'sqrt(16)', 'exp(1)'];
 
 export function GuideView() {
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/calculator');
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="bg-[var(--surface)] p-6 md:p-8 rounded-3xl shadow-sm border border-[var(--border)] space-y-8">
-        <div>
-          <h2 className="text-2xl font-serif font-bold text-[var(--primary)]">Guía de Uso</h2>
-          <p className="mt-2 opacity-70">
-            Aquí tienes una referencia rápida para usar la calculadora, entender las funciones científicas y saber cómo funciona el acceso con Google.
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-serif font-bold text-[var(--primary)]">Guía de Uso</h2>
+            <p className="mt-2 opacity-70">
+              Aquí tienes una referencia rápida para usar la calculadora, entender las funciones científicas y saber cómo funciona el acceso con Google.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleClose}
+            title="Cerrar guía"
+            className="shrink-0 rounded-2xl border border-[var(--border)] p-2 text-[var(--text)] transition-colors hover:bg-[var(--surface-hover)]"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <section className="space-y-4">
