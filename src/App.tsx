@@ -12,7 +12,7 @@ const NotesView = lazy(() => import('./views/NotesView').then((module) => ({ def
 const SettingsView = lazy(() => import('./views/SettingsView').then((module) => ({ default: module.SettingsView })));
 const GuideView = lazy(() => import('./views/GuideView').then((module) => ({ default: module.GuideView })));
 
-const Router = import.meta.env.VITE_ROUTER_MODE === 'hash' ? HashRouter : BrowserRouter;
+const useHashRouter = import.meta.env.VITE_ROUTER_MODE === 'hash';
 
 export default function App() {
   const { theme, customThemeColors } = useAppStore();
@@ -37,8 +37,7 @@ export default function App() {
     }
   }, [theme, customThemeColors]);
 
-  return (
-    <Router basename={import.meta.env.BASE_URL}>
+  const appShell = (
       <div className="flex min-h-dvh overflow-hidden bg-[var(--bg)] text-[var(--text)] transition-colors duration-300 md:h-screen">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
@@ -59,6 +58,7 @@ export default function App() {
           </main>
         </div>
       </div>
-    </Router>
   );
+
+  return useHashRouter ? <HashRouter>{appShell}</HashRouter> : <BrowserRouter basename={import.meta.env.BASE_URL}>{appShell}</BrowserRouter>;
 }
