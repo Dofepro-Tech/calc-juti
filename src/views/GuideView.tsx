@@ -90,8 +90,9 @@ export function GuideView() {
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
               <p className="font-semibold text-[var(--primary)]">Android o escritorio</p>
-              <p>Usa el botón Instalar app de la barra superior cuando aparezca. Si no aparece, abre la app en Chrome o Edge y usa el menú del navegador.</p>
+              <p>Usa el botón Instalar app de la barra superior cuando aparezca. Si no aparece, abre la app en Chrome o Edge y busca la opción Instalar app en el menú del navegador.</p>
               <p>La app puede abrirse a pantalla completa y quedar como acceso directo sin Play Store.</p>
+              <p>Si en Android el icono te sale con el logo de Edge o Chrome, ese acceso es un atajo del navegador: elimínalo y vuelve a instalar la app correctamente.</p>
             </div>
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
               <p className="font-semibold text-[var(--primary)]">iPhone o iPad</p>
@@ -102,6 +103,7 @@ export function GuideView() {
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
             <p className="font-semibold text-[var(--primary)]">Descarga e instalación</p>
             <p>La versión actual se instala como PWA desde el navegador. No descarga un archivo APK o EXE independiente.</p>
+            <p>El aviso de actualización también funciona en web y escritorio cuando la persona tiene abierta una versión anterior y publicas una nueva.</p>
             <p>Si luego quieres un instalador real para Android o escritorio, hay que empaquetar la app como proyecto nativo por separado.</p>
           </div>
         </section>

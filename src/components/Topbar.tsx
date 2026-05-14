@@ -84,7 +84,7 @@ export function Topbar() {
     }
 
     if (isAndroid) {
-      return 'En Android abre la app en Chrome o Edge. Si no ves la opción automática, usa el botón Instalar app cuando aparezca o abre el menú del navegador y elige Instalar app o Agregar a pantalla principal.';
+      return 'En Android abre la app en Chrome o Edge y usa Instalar app. Si el icono te sale con el logo de Edge o Chrome, ese acceso fue creado como atajo del navegador: elimínalo y vuelve a instalarla como app, no como acceso directo.';
     }
 
     return 'En escritorio abre la app en Chrome o Edge y usa el icono de instalación o el menú del navegador para instalarla.';
