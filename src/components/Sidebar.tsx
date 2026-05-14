@@ -16,7 +16,7 @@ const navItems = [
 ];
 
 const authorName = 'Dofepro-tech';
-const authorEmail = 'elsonidistaadnj@example.com';
+const authorEmail = 'dofeprotech@gmail.com';
 
 export function Sidebar() {
   const location = useLocation();
