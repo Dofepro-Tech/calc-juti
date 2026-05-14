@@ -9,57 +9,95 @@ interface AuthUserState {
   clearError: () => void;
 }
 
+interface SharedAuthState {
+  user: User | null;
+  loading: boolean;
+  error: unknown | null;
+}
+
+const sharedAuthState: SharedAuthState = {
+  user: auth.currentUser,
+  loading: true,
+  error: null,
+};
+
+const subscribers = new Set<() => void>();
+let authObserverStarted = false;
+
+function notifySubscribers() {
+  subscribers.forEach((subscriber) => subscriber());
+}
+
+function clearSharedError() {
+  if (sharedAuthState.error === null) {
+    return;
+  }
+
+  sharedAuthState.error = null;
+  notifySubscribers();
+}
+
+function startAuthObserver() {
+  if (authObserverStarted) {
+    return;
+  }
+
+  authObserverStarted = true;
+
+  let authResolved = false;
+  let redirectResolved = false;
+
+  const finishLoading = () => {
+    if (authResolved && redirectResolved && sharedAuthState.loading) {
+      sharedAuthState.loading = false;
+      notifySubscribers();
+    }
+  };
+
+  onAuthStateChanged(auth, (nextUser) => {
+    sharedAuthState.user = nextUser;
+    authResolved = true;
+    notifySubscribers();
+    finishLoading();
+  });
+
+  getRedirectResult(auth)
+    .catch((nextError) => {
+      sharedAuthState.error = nextError;
+      notifySubscribers();
+    })
+    .finally(() => {
+      redirectResolved = true;
+      finishLoading();
+    });
+}
+
 export function useAuthUser() {
-  const [user, setUser] = useState<User | null>(() => auth.currentUser);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown | null>(null);
+  const [state, setState] = useState<SharedAuthState>(() => ({ ...sharedAuthState }));
 
   const clearError = useCallback(() => {
-    setError(null);
+    clearSharedError();
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
-    let authResolved = false;
-    let redirectResolved = false;
+    startAuthObserver();
 
-    const finishLoading = () => {
-      if (isMounted && authResolved && redirectResolved) {
-        setLoading(false);
-      }
+    const syncState = () => {
+      setState({ ...sharedAuthState });
     };
 
-    const unsubscribe = onAuthStateChanged(auth, (nextUser) => {
-      if (!isMounted) {
-        return;
-      }
-
-      setUser(nextUser);
-      authResolved = true;
-      finishLoading();
-    });
-
-    getRedirectResult(auth)
-      .catch((nextError) => {
-        if (isMounted) {
-          setError(nextError);
-        }
-      })
-      .finally(() => {
-        redirectResolved = true;
-        finishLoading();
-      });
+    subscribers.add(syncState);
+    syncState();
 
     return () => {
-      isMounted = false;
-      unsubscribe();
+      subscribers.delete(syncState);
     };
   }, []);
 
   return {
-    user,
-    loading,
-    error,
+    user: state.user,
+    loading: state.loading,
+    error: state.error,
     clearError,
   } satisfies AuthUserState;
 }
