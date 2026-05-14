@@ -1,0 +1,36 @@
+{
+  "entities": {
+    "Note": {
+      "title": "Note",
+      "description": "User notes",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "content"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "User favorite currencies",
+      "type": "object",
+      "properties": {
+        "pair": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["pair"]
+    }
+  },
+  "firestore": {
+    "users/{userId}/notes/{noteId}": {
+      "schema": "Note",
+      "description": "Notes per user"
+    },
+    "users/{userId}/favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "Favorites per user"
+    }
+  }
+}

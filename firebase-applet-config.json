@@ -1,0 +1,11 @@
+{
+  "projectId": "calc-juti",
+  "appId": "1:436875784210:web:e0dffd893d786e6c03e8cb",
+  "apiKey": "AIzaSyCmuXvJgjgyTexyd06GS8_E08EYyR-911E",
+  "authDomain": "calc-juti.firebaseapp.com",
+  "databaseURL": "https://calc-juti-default-rtdb.firebaseio.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "calc-juti.firebasestorage.app",
+  "messagingSenderId": "436875784210",
+  "measurementId": ""
+}

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Calc Juti</title>
+  <desc id="desc">Calculator app icon adapted as a lightweight SVG.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f59d0"/>
+      <stop offset="0.55" stop-color="#2935a6"/>
+      <stop offset="1" stop-color="#30005b"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9ffcff"/>
+      <stop offset="1" stop-color="#36cce9"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2467c8"/>
+      <stop offset="1" stop-color="#0d356f"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8feff"/>
+      <stop offset="1" stop-color="#d6ebff"/>
+    </linearGradient>
+    <linearGradient id="op" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc857"/>
+      <stop offset="1" stop-color="#ff7d2d"/>
+    </linearGradient>
+    <linearGradient id="eq" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#42f1e7"/>
+      <stop offset="1" stop-color="#1899d5"/>
+    </linearGradient>
+    <linearGradient id="clear" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6f8c"/>
+      <stop offset="1" stop-color="#e21b56"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0c0830" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <rect x="10" y="10" width="236" height="236" rx="38" fill="url(#bg)"/>
+  <path d="M18 194c18-39 39-56 72-74 46-24 67-47 94-97" fill="none" stroke="#62f0ff" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+  <g fill="#82d8ff" opacity="0.28">
+    <path d="M18 100h18" stroke="#82d8ff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M27 91v18" stroke="#82d8ff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M228 160h15" stroke="#82d8ff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M235 153v14" stroke="#82d8ff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M235 68a1.5 1.5 0 1 1 0 .01" stroke="#c6b4ff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="42" y="10" width="172" height="214" rx="28" fill="#38d9eb" opacity="0.58"/>
+    <rect x="47" y="15" width="162" height="204" rx="24" fill="#164a7f" stroke="url(#glow)" stroke-width="3.5"/>
+    <rect x="57" y="24" width="142" height="185" rx="20" fill="none" stroke="#5af4ff" stroke-width="2" opacity="0.75"/>
+    <rect x="59" y="38" width="138" height="44" rx="11" fill="url(#screen)" stroke="#64f8ff" stroke-width="2.5"/>
+    <path d="M165 38h32v44h-62" fill="#7fffff" opacity="0.08"/>
+    <text x="128" y="64" text-anchor="middle" fill="#fff" font-size="16" font-family="Segoe UI, Arial, sans-serif" font-weight="700">123 + 45 = 168</text>
+    <g font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+      <text x="74" y="77" fill="#ffbc6c">+</text>
+      <text x="105" y="77" fill="#ffbc6c">−</text>
+      <text x="136" y="77" fill="#ffbc6c">×</text>
+      <text x="167" y="77" fill="#9ff279">÷</text>
+      <text x="188" y="77" fill="#74f0ff">=</text>
+    </g>
+    <rect x="177" y="44" width="17" height="8" rx="2" fill="none" stroke="#a9f7ac" stroke-width="1.5"/>
+    <rect x="178.5" y="45.5" width="12" height="5" rx="1" fill="#9def9e"/>
+
+    <rect x="59" y="90" width="138" height="112" rx="16" fill="url(#panel)" stroke="#d9f7ff" stroke-width="1.8"/>
+    <rect x="59" y="180" width="138" height="22" rx="10" fill="#d7d9ff" opacity="0.35"/>
+
+    <g font-family="Segoe UI, Arial, sans-serif" font-weight="700" text-anchor="middle">
+      <g fill="url(#op)">
+        <rect x="71" y="96" width="33" height="21" rx="8"/>
+        <rect x="109" y="96" width="33" height="21" rx="8"/>
+        <rect x="147" y="96" width="33" height="21" rx="8"/>
+        <rect x="185" y="96" width="26" height="21" rx="8"/>
+        <rect x="185" y="122" width="26" height="21" rx="8"/>
+        <rect x="185" y="148" width="26" height="21" rx="8"/>
+      </g>
+      <g fill="#f6fdff" stroke="#83d0e7" stroke-width="1.1">
+        <rect x="71" y="122" width="33" height="21" rx="8"/>
+        <rect x="109" y="122" width="33" height="21" rx="8"/>
+        <rect x="147" y="122" width="33" height="21" rx="8"/>
+        <rect x="71" y="148" width="33" height="21" rx="8"/>
+        <rect x="109" y="148" width="33" height="21" rx="8"/>
+        <rect x="147" y="148" width="33" height="21" rx="8"/>
+        <rect x="71" y="174" width="33" height="21" rx="8"/>
+        <rect x="109" y="174" width="33" height="21" rx="8"/>
+        <rect x="147" y="174" width="33" height="21" rx="8"/>
+        <rect x="109" y="200" width="33" height="21" rx="8"/>
+        <rect x="147" y="200" width="33" height="21" rx="8"/>
+      </g>
+      <rect x="71" y="200" width="33" height="21" rx="8" fill="url(#clear)"/>
+      <rect x="185" y="174" width="26" height="47" rx="8" fill="url(#eq)"/>
+
+      <g fill="#fff" font-size="12">
+        <text x="87.5" y="110">√</text>
+        <text x="125.5" y="110">%</text>
+        <text x="163.5" y="110">π</text>
+        <text x="198" y="110">÷</text>
+        <text x="198" y="136">×</text>
+        <text x="198" y="162">−</text>
+        <text x="198" y="195">+</text>
+        <text x="198" y="210">=</text>
+      </g>
+      <g fill="#0c447c" font-size="12.5">
+        <text x="87.5" y="136">7</text>
+        <text x="125.5" y="136">8</text>
+        <text x="163.5" y="136">9</text>
+        <text x="87.5" y="162">4</text>
+        <text x="125.5" y="162">5</text>
+        <text x="163.5" y="162">6</text>
+        <text x="87.5" y="188">1</text>
+        <text x="125.5" y="188">2</text>
+        <text x="163.5" y="188">3</text>
+        <text x="125.5" y="214">0</text>
+        <text x="163.5" y="214">•</text>
+      </g>
+      <text x="87.5" y="214" fill="#fff" font-size="12.5">C</text>
+    </g>
+  </g>
+</svg>

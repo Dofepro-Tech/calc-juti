@@ -1,0 +1,6 @@
+{
+  "name": "Calc Juti",
+  "description": "Calculadora multifuncional, conversor de divisas en tiempo real y unidades. Incluye favoritos y notas en Firebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

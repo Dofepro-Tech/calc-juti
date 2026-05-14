@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidNote(data) {
+      return data.keys().hasAll(['title', 'content']) 
+        && data.title is string && data.title.size() <= 200
+        && data.content is string && data.content.size() <= 10000;
+    }
+
+    function isValidFavorite(data) {
+      return data.keys().hasAll(['pair'])
+        && data.pair is string && data.pair.size() <= 10;
+    }
+
+    match /users/{userId}/notes/{noteId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && isValidNote(incoming())
+        && incoming().keys().hasAll(['createdAt', 'updatedAt'])
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isOwner(userId)
+        && isValidNote(incoming())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'content', 'updatedAt'])
+        && incoming().updatedAt == request.time;
+      allow delete: if isOwner(userId);
+    }
+
+    match /users/{userId}/favorites/{favId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && isValidFavorite(incoming())
+        && incoming().keys().hasAll(['createdAt'])
+        && incoming().createdAt == request.time;
+      allow delete: if isOwner(userId);
+    }
+  }
+}
