@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LogIn, LogOut, Menu, User } from 'lucide-react';
 import { auth } from '../firebase';
-import { signInWithRedirect, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useAuthUser } from '../hooks/useAuthUser';
 import { useAppStore } from '../store/useAppStore';
 
@@ -18,6 +18,14 @@ function getAuthErrorMessage(error: unknown) {
   switch (code) {
     case 'auth/unauthorized-domain':
       return `El dominio ${host} no está autorizado en Firebase. Agrégalo en Authentication > Settings > Authorized domains. Cuando quede autorizado, Google servirá también para registrarse la primera vez.`;
+    case 'auth/popup-blocked':
+      return 'El navegador bloqueó la ventana de Google. Permite ventanas emergentes para este sitio e inténtalo otra vez.';
+    case 'auth/popup-closed-by-user':
+      return 'Se cerró la ventana de Google antes de completar el acceso.';
+    case 'auth/cancelled-popup-request':
+      return 'Ya hay un acceso con Google en curso. Espera a que termine antes de intentarlo de nuevo.';
+    case 'auth/operation-not-supported-in-this-environment':
+      return 'Este navegador o contenedor no permite la ventana de acceso de Google. Abre la app en un navegador normal.';
     default:
       return 'No se pudo iniciar sesión con Google en este momento.';
   }
@@ -50,10 +58,11 @@ export function Topbar() {
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
     setAuthMessage(null);
     setIsAuthenticating(true);
     try {
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
     } catch (e) {
       console.error(e);
       setAuthMessage(getAuthErrorMessage(e));
