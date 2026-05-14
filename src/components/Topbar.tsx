@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Download, LogIn, LogOut, Menu, User } from 'lucide-react';
+import { Download, LogIn, LogOut, Menu, User, X } from 'lucide-react';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useAuthUser } from '../hooks/useAuthUser';
@@ -43,6 +43,10 @@ export function Topbar() {
   const { toggleMobileSidebar } = useAppStore();
   const [notice, setNotice] = useState<TopbarNotice | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  const closeNotice = () => {
+    setNotice(null);
+  };
 
   useEffect(() => {
     if (!error) {
@@ -166,7 +170,7 @@ export function Topbar() {
             title={canInstall ? 'Instalar app' : 'Ver cómo instalar la app'}
           >
             <Download className="w-4 h-4" />
-            <span className="hidden md:block">{canInstall ? 'Instalar app' : 'Como instalar'}</span>
+            <span>{canInstall ? 'Instalar app' : 'Como instalar'}</span>
           </button>
         )}
         {user ? (
@@ -202,8 +206,20 @@ export function Topbar() {
       </div>
       {notice && (
         <div className="absolute left-3 right-3 top-full z-20 mt-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-xs shadow-lg md:left-auto md:right-4 md:max-w-sm">
-          <div className="font-semibold text-[var(--primary)]">{notice.title}</div>
-          <div className="mt-1 opacity-75">{notice.message}</div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="font-semibold text-[var(--primary)]">{notice.title}</div>
+              <div className="mt-1 opacity-75">{notice.message}</div>
+            </div>
+            <button
+              type="button"
+              onClick={closeNotice}
+              title="Cerrar aviso"
+              className="shrink-0 rounded-xl p-1 text-[var(--text)] opacity-70 transition-colors hover:bg-[var(--surface-hover)] hover:opacity-100"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       )}
     </header>
