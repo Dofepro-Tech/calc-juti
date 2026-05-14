@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { LogIn, LogOut, Menu, User } from 'lucide-react';
+import { Download, LogIn, LogOut, Menu, User } from 'lucide-react';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useAuthUser } from '../hooks/useAuthUser';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 import { useAppStore } from '../store/useAppStore';
+
+interface TopbarNotice {
+  title: string;
+  message: string;
+}
 
 function getAuthErrorMessage(error: unknown) {
   const code = typeof error === 'object' && error !== null && 'code' in error
@@ -33,8 +39,9 @@ function getAuthErrorMessage(error: unknown) {
 
 export function Topbar() {
   const { user, loading, error, clearError } = useAuthUser();
+  const { canInstall, isInstalled, promptInstall } = usePwaInstall();
   const { toggleMobileSidebar } = useAppStore();
-  const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [notice, setNotice] = useState<TopbarNotice | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   useEffect(() => {
@@ -42,7 +49,10 @@ export function Topbar() {
       return;
     }
 
-    setAuthMessage(getAuthErrorMessage(error));
+    setNotice({
+      title: 'No se pudo acceder o registrar',
+      message: getAuthErrorMessage(error),
+    });
     setIsAuthenticating(false);
   }, [error]);
 
@@ -52,20 +62,63 @@ export function Topbar() {
     }
 
     clearError();
-    setAuthMessage(null);
+    setNotice(null);
     setIsAuthenticating(false);
   }, [clearError, user]);
+
+  const getInstallHelpMessage = () => {
+    if (typeof navigator === 'undefined') {
+      return 'Abre la app en Chrome, Edge o Safari para instalarla.';
+    }
+
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isAndroid = userAgent.includes('android');
+    const isIos = /iphone|ipad|ipod/.test(userAgent);
+
+    if (isIos) {
+      return 'En iPhone o iPad abre la app en Safari, toca Compartir y luego Añadir a pantalla de inicio.';
+    }
+
+    if (isAndroid) {
+      return 'En Android abre la app en Chrome o Edge. Si no ves la opción automática, usa el botón Instalar app cuando aparezca o abre el menú del navegador y elige Instalar app o Agregar a pantalla principal.';
+    }
+
+    return 'En escritorio abre la app en Chrome o Edge y usa el icono de instalación o el menú del navegador para instalarla.';
+  };
+
+  const handleInstall = async () => {
+    if (!canInstall) {
+      setNotice({
+        title: 'Instalar app',
+        message: getInstallHelpMessage(),
+      });
+      return;
+    }
+
+    setNotice(null);
+    const outcome = await promptInstall();
+
+    if (outcome === 'dismissed') {
+      setNotice({
+        title: 'Instalar app',
+        message: 'Se cerró la instalación antes de completarse. Puedes intentarlo otra vez desde este botón.',
+      });
+    }
+  };
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    setAuthMessage(null);
+    setNotice(null);
     setIsAuthenticating(true);
     try {
       await signInWithPopup(auth, provider);
     } catch (e) {
       console.error(e);
-      setAuthMessage(getAuthErrorMessage(e));
+      setNotice({
+        title: 'No se pudo acceder o registrar',
+        message: getAuthErrorMessage(e),
+      });
     } finally {
       setIsAuthenticating(false);
     }
@@ -74,10 +127,13 @@ export function Topbar() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setAuthMessage(null);
+      setNotice(null);
     } catch (e) {
       console.error(e);
-      setAuthMessage('No se pudo cerrar la sesión en este momento.');
+      setNotice({
+        title: 'No se pudo cerrar la sesión',
+        message: 'No se pudo cerrar la sesión en este momento.',
+      });
     }
   };
 
@@ -102,6 +158,17 @@ export function Topbar() {
           <div className="text-xs opacity-50">Actualizado</div>
           <div className="text-sm font-semibold">Reciente</div>
         </div>
+        {!isInstalled && (
+          <button
+            type="button"
+            onClick={handleInstall}
+            className="flex items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-sm font-medium text-[var(--text)] transition-colors hover:bg-[var(--surface-hover)] sm:px-4"
+            title={canInstall ? 'Instalar app' : 'Ver cómo instalar la app'}
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden md:block">{canInstall ? 'Instalar app' : 'Como instalar'}</span>
+          </button>
+        )}
         {user ? (
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2 min-w-0">
@@ -133,10 +200,10 @@ export function Topbar() {
           </button>
         )}
       </div>
-      {authMessage && (
+      {notice && (
         <div className="absolute left-3 right-3 top-full z-20 mt-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-xs shadow-lg md:left-auto md:right-4 md:max-w-sm">
-          <div className="font-semibold text-[var(--primary)]">No se pudo acceder o registrar</div>
-          <div className="mt-1 opacity-75">{authMessage}</div>
+          <div className="font-semibold text-[var(--primary)]">{notice.title}</div>
+          <div className="mt-1 opacity-75">{notice.message}</div>
         </div>
       )}
     </header>

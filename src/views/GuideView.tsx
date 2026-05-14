@@ -67,7 +67,7 @@ export function GuideView() {
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
               <p className="font-semibold text-[var(--primary)]">Android o escritorio</p>
-              <p>Abre el menú del navegador y usa Instalar aplicación o Agregar a pantalla principal.</p>
+              <p>Usa el botón Instalar app de la barra superior cuando aparezca. Si no aparece, abre la app en Chrome o Edge y usa el menú del navegador.</p>
               <p>La app puede abrirse a pantalla completa y quedar como acceso directo sin Play Store.</p>
             </div>
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
@@ -75,6 +75,11 @@ export function GuideView() {
               <p>Abre la app en Safari, toca Compartir y luego Añadir a pantalla de inicio.</p>
               <p>El icono y el nombre ya quedan preparados para instalarla como acceso directo.</p>
             </div>
+          </div>
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-sm opacity-80 space-y-2">
+            <p className="font-semibold text-[var(--primary)]">Descarga e instalación</p>
+            <p>La versión actual se instala como PWA desde el navegador. No descarga un archivo APK o EXE independiente.</p>
+            <p>Si luego quieres un instalador real para Android o escritorio, hay que empaquetar la app como proyecto nativo por separado.</p>
           </div>
         </section>
       </div>
