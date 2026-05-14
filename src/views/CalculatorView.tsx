@@ -68,6 +68,7 @@ function isFunction(val: string) {
 export function CalculatorView() {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
+  const [justEvaluated, setJustEvaluated] = useState(false);
   const {
     history,
     addHistory,
@@ -95,12 +96,40 @@ export function CalculatorView() {
     };
   }, [setCalculatorHistoryOpen]);
 
+  const getResultSeed = () => {
+    if (!result || result === 'Error') {
+      return '';
+    }
+
+    return result.startsWith('-') ? `(${result})` : result;
+  };
+
+  const getBaseExpressionForInput = (val: string) => {
+    if (!justEvaluated) {
+      return expression;
+    }
+
+    if (isFunction(val) || val === '(' || val === 'pi' || val === 'e' || val === '.' || /^\d$/.test(val)) {
+      return '';
+    }
+
+    return getResultSeed();
+  };
+
   const handlePress = (val: string) => {
     triggerHaptic(hapticFeedback);
     if (val === 'C') {
       setExpression('');
       setResult('');
+      setJustEvaluated(false);
     } else if (val === '⌫') {
+      if (justEvaluated) {
+        setExpression('');
+        setResult('');
+        setJustEvaluated(false);
+        return;
+      }
+
       setExpression(prev => prev.slice(0, -1));
     } else if (val === '=') {
       try {
@@ -111,31 +140,42 @@ export function CalculatorView() {
 
         const evalResult = evaluateExpression(normalizedExpression);
         const resStr = roundExpressionResult(evalResult, precision);
-        setExpression(normalizedExpression);
+        setExpression(resStr);
         setResult(resStr);
+        setJustEvaluated(true);
         addHistory({ expression: normalizedExpression, result: resStr });
       } catch {
         setResult('Error');
+        setJustEvaluated(false);
       }
     } else if (val === 'Ans') {
       if (history.length > 0) {
+         const baseExpression = getBaseExpressionForInput(val);
          const ansValue = history[0].result.startsWith('-') ? `(${history[0].result})` : history[0].result;
-         setExpression(prev => appendFragment(prev, ansValue, 'ans'));
+         setExpression(appendFragment(baseExpression, ansValue, 'ans'));
+         setJustEvaluated(false);
       }
     } else if (isFunction(val)) {
-      setExpression(prev => appendFragment(prev, `${val}(`, 'function'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), `${val}(`, 'function'));
+      setJustEvaluated(false);
     } else if (val === 'pi' || val === 'e') {
-      setExpression(prev => appendFragment(prev, val, 'constant'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'constant'));
+      setJustEvaluated(false);
     } else if (val === '(') {
-      setExpression(prev => appendFragment(prev, val, 'openParen'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'openParen'));
+      setJustEvaluated(false);
     } else if (val === ')') {
-      setExpression(prev => appendFragment(prev, val, 'closeParen'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'closeParen'));
+      setJustEvaluated(false);
     } else if (val === '.') {
-      setExpression(prev => appendFragment(prev, val, 'decimal'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'decimal'));
+      setJustEvaluated(false);
     } else if (/^\d$/.test(val)) {
-      setExpression(prev => appendFragment(prev, val, 'digit'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'digit'));
+      setJustEvaluated(false);
     } else {
-      setExpression(prev => appendFragment(prev, val, 'operator'));
+      setExpression(appendFragment(getBaseExpressionForInput(val), val, 'operator'));
+      setJustEvaluated(false);
     }
   };
 
@@ -156,13 +196,15 @@ export function CalculatorView() {
     }
   }, [expression, precision]);
 
+  const expressionDisplay = justEvaluated ? '' : expression;
+
   return (
     <div className="relative mx-auto flex h-full max-w-4xl min-h-0 flex-col gap-4 pb-4 md:h-[calc(100vh-8rem)] md:flex-row md:gap-6 md:pb-0">
       <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm md:p-8">
         <div className="relative mb-4 flex min-h-[132px] flex-none flex-col items-end justify-end overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm cursor-text sm:min-h-[160px] md:mb-6 md:p-8">
           <div className="absolute top-6 left-6 text-xs font-mono text-[var(--primary)] opacity-60 tracking-tighter uppercase">Live Calculator Engine v2.0</div>
           <div className="mb-2 w-full overflow-hidden text-ellipsis whitespace-nowrap text-right font-mono text-xl font-light opacity-60 md:text-2xl">
-            {expression || '0'}
+            {expressionDisplay || (!result ? '0' : '')}
           </div>
           <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-right text-4xl font-bold tracking-tighter text-[var(--text)] sm:text-5xl md:text-6xl">
             {result || '='}
@@ -235,7 +277,11 @@ export function CalculatorView() {
                     <div className="text-lg font-bold font-mono text-[var(--primary)] truncate">={record.result}</div>
                     
                     <button 
-                      onClick={() => setExpression(record.expression)}
+                      onClick={() => {
+                        setExpression(record.expression);
+                        setResult(record.result);
+                        setJustEvaluated(false);
+                      }}
                       className="absolute right-10 top-1/2 -translate-y-1/2 rounded-full p-2 opacity-100 transition-opacity hover:bg-[var(--surface-hover)] md:opacity-0 md:group-hover:opacity-100"
                       title="Copiar expresión"
                     >

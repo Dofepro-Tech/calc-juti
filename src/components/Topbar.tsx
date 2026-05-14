@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Download, LogIn, LogOut, Menu, User, X } from 'lucide-react';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { NavLink } from 'react-router-dom';
 import { useAuthUser } from '../hooks/useAuthUser';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 import { useAppStore } from '../store/useAppStore';
@@ -142,7 +143,7 @@ export function Topbar() {
   };
 
   return (
-    <header className="relative flex min-h-16 shrink-0 items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-3 py-3 transition-colors duration-300 sm:px-4 md:px-8">
+    <header className="app-chrome relative flex min-h-16 shrink-0 items-center justify-between gap-3 border-b border-[var(--border)] px-3 py-3 transition-colors duration-300 sm:px-4 md:px-8">
       <div className="flex flex-1 items-center gap-3">
         <button
           type="button"
@@ -152,9 +153,31 @@ export function Topbar() {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <div className="flex gap-6 text-sm font-medium text-[var(--text)] opacity-60">
-        <span className="hidden md:block hover:opacity-100 cursor-pointer">Dashboard</span>
-        <span className="hidden md:block hover:opacity-100 cursor-pointer">Mercados</span>
+        <div className="hidden gap-2 text-sm font-medium md:flex">
+          <NavLink
+            to="/calculator"
+            className={({ isActive }) =>
+              `rounded-full px-3 py-1.5 transition-colors ${
+                isActive
+                  ? 'bg-[var(--surface-hover)] text-[var(--primary)]'
+                  : 'text-[var(--text)] opacity-60 hover:bg-[var(--surface-hover)] hover:opacity-100'
+              }`
+            }
+          >
+            Calculadora
+          </NavLink>
+          <NavLink
+            to="/currency"
+            className={({ isActive }) =>
+              `rounded-full px-3 py-1.5 transition-colors ${
+                isActive
+                  ? 'bg-[var(--surface-hover)] text-[var(--primary)]'
+                  : 'text-[var(--text)] opacity-60 hover:bg-[var(--surface-hover)] hover:opacity-100'
+              }`
+            }
+          >
+            Divisas
+          </NavLink>
         </div>
       </div>
       <div className="flex items-center gap-2 sm:gap-4">

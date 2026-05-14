@@ -17,6 +17,9 @@
     --surface: #ffffff;
     --surface-hover: #f1f5f9;
     --border: #e2e8f0;
+    --chrome-surface: rgba(255, 255, 255, 0.92);
+    --chrome-surface-hover: rgba(241, 245, 249, 0.96);
+    --chrome-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
     --app-background: #f8fafc;
   }
 
@@ -28,6 +31,9 @@
     --surface: #1e293b;
     --surface-hover: #334155;
     --border: #334155;
+    --chrome-surface: rgba(15, 23, 42, 0.84);
+    --chrome-surface-hover: rgba(30, 41, 59, 0.92);
+    --chrome-shadow: 0 18px 40px rgba(2, 6, 23, 0.32);
     --app-background: #020617;
   }
 
@@ -39,6 +45,9 @@
     --surface: rgba(255, 255, 255, 0.70);
     --surface-hover: rgba(255, 255, 255, 0.84);
     --border: rgba(29, 78, 216, 0.24);
+    --chrome-surface: rgba(255, 255, 255, 0.38);
+    --chrome-surface-hover: rgba(255, 255, 255, 0.52);
+    --chrome-shadow: 0 22px 48px rgba(15, 23, 58, 0.16);
     --app-background:
       radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.55) 0, transparent 28%),
       radial-gradient(circle at 88% 16%, rgba(6, 182, 212, 0.52) 0, transparent 30%),
@@ -55,6 +64,9 @@
     --surface: var(--custom-surface, #1e293b);
     --surface-hover: var(--custom-surface-hover, #334155);
     --border: var(--custom-border, #334155);
+    --chrome-surface: color-mix(in srgb, var(--custom-surface, #1e293b) 88%, transparent);
+    --chrome-surface-hover: color-mix(in srgb, var(--custom-surface-hover, #334155) 92%, transparent);
+    --chrome-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
     --app-background: var(--custom-bg, #0f172a);
   }
 }
@@ -77,6 +89,17 @@ body {
   background: var(--app-background);
   background-attachment: fixed;
   background-size: cover;
+}
+
+.app-chrome {
+  background: var(--chrome-surface);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--chrome-shadow);
+}
+
+.app-chrome-hover:hover {
+  background: var(--chrome-surface-hover);
 }
 
 .custom-scrollbar::-webkit-scrollbar {

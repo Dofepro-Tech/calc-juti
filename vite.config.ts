@@ -25,7 +25,7 @@ export default defineConfig(() => {
           scope: basePath,
           start_url: basePath,
           name: 'Calc Juti',
-          short_name: 'Juti',
+          short_name: 'Calc Juti',
           description: 'Calculadora científica, divisas, unidades, notas y gráficos en una sola app.',
           lang: 'es',
           display: 'standalone',

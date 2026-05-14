@@ -52,7 +52,7 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-[18rem] max-w-[86vw] flex-col border-r border-[var(--border)] bg-[var(--surface)] transition-all duration-300 md:static md:z-auto md:w-16 md:max-w-none md:translate-x-0 md:shrink-0',
+          'app-chrome fixed inset-y-0 left-0 z-40 flex w-[18rem] max-w-[86vw] flex-col border-r border-[var(--border)] transition-all duration-300 md:static md:z-auto md:w-16 md:max-w-none md:translate-x-0 md:shrink-0',
           widthClass,
           mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0 md:shadow-none'
         )}
