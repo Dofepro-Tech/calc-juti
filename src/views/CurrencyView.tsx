@@ -111,6 +111,25 @@ export function CurrencyView() {
   
   const { showCurrencyNames, precision } = useAppStore();
 
+  const convertCurrency = () => {
+    if (Object.keys(rates).length === 0 || !amount) {
+      setResult(null);
+      return;
+    }
+
+    const numAmount = parseFloat(amount);
+    if (Number.isNaN(numAmount)) {
+      setResult(null);
+      return;
+    }
+
+    const fromRate = rates[fromCurrency] || 1;
+    const toRate = rates[toCurrency] || 1;
+    const valInUsd = numAmount / fromRate;
+    const converted = valInUsd * toRate;
+    setResult(converted);
+  };
+
   useEffect(() => {
     fetchRates();
     if (user) {
@@ -175,20 +194,14 @@ export function CurrencyView() {
   };
 
   useEffect(() => {
-    if (Object.keys(rates).length > 0 && amount) {
-      const numAmount = parseFloat(amount);
-      if (!isNaN(numAmount)) {
-         // Rates are relative to USD
-         const fromRate = rates[fromCurrency] || 1;
-         const toRate = rates[toCurrency] || 1;
-         const valInUsd = numAmount / fromRate;
-         const converted = valInUsd * toRate;
-         setResult(converted);
-      } else {
-         setResult(null);
-      }
+    setResult(null);
+  }, [amount, fromCurrency, toCurrency]);
+
+  useEffect(() => {
+    if (Object.keys(rates).length > 0) {
+      convertCurrency();
     }
-  }, [amount, fromCurrency, toCurrency, rates]);
+  }, [rates]);
 
   const swap = () => {
     setFromCurrency(toCurrency);
@@ -237,7 +250,8 @@ export function CurrencyView() {
         {loading ? (
           <div className="py-10 text-center opacity-50 font-medium animate-pulse">Sincronizando tasas de cambio...</div>
         ) : (
-          <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+          <div className="space-y-5">
+            <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
             {/* From */}
             <div className="relative w-full">
               <label className="text-[10px] absolute top-2 left-3 font-bold text-[var(--text)] opacity-40 uppercase z-10">Desde</label>
@@ -285,7 +299,7 @@ export function CurrencyView() {
               <label className="text-[10px] absolute top-2 left-3 font-bold text-[var(--primary)] uppercase z-10">Hacia</label>
               <div className="pt-6 pb-2 px-3 border border-[var(--primary)] border-opacity-30 bg-[var(--primary)] bg-opacity-5 rounded-2xl flex items-center justify-between overflow-visible relative">
                 <div className="w-full bg-transparent px-2 font-mono text-2xl font-bold flex items-center justify-start md:justify-end overflow-x-auto text-[var(--text)]">
-                  {result !== null ? result.toFixed(precision) : '-'}
+                  {result !== null ? result.toFixed(precision) : 'Pulsa Convertir'}
                 </div>
                 
                 <SearchableSelect 
@@ -298,6 +312,18 @@ export function CurrencyView() {
                   className="pl-2 md:pl-4 border-l border-[var(--primary)] border-opacity-30 max-w-[140px] md:max-w-[180px]"
                 />
               </div>
+            </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={convertCurrency}
+                disabled={!amount || Number.isNaN(parseFloat(amount))}
+                className="inline-flex items-center justify-center rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-[var(--bg)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Convertir
+              </button>
             </div>
           </div>
         )}

@@ -26,6 +26,7 @@ export function UnitConverterView() {
   const [fromUnit, setFromUnit] = useState('m');
   const [toUnit, setToUnit] = useState('km');
   const [amount, setAmount] = useState('1');
+  const [result, setResult] = useState('');
 
   // Handle unit type change safely
   const handleTypeChange = (type: string) => {
@@ -59,8 +60,6 @@ export function UnitConverterView() {
     return (baseValue / typeData[toUnit]).toPrecision(6);
   };
 
-  const result = calculate();
-
   const [recentPars, setRecentPars] = useState<Record<string, string[]>>({});
   const [quickSwapIdx, setQuickSwapIdx] = useState(0);
 
@@ -74,6 +73,18 @@ export function UnitConverterView() {
       return { ...prev, [activeType]: newList };
     });
   }, [activeType, fromUnit, toUnit]);
+
+  React.useEffect(() => {
+    setResult('');
+  }, [activeType, fromUnit, toUnit, amount]);
+
+  React.useEffect(() => {
+    setResult(calculate());
+  }, []);
+
+  const handleConvert = () => {
+    setResult(calculate());
+  };
 
   const swap = () => {
     setFromUnit(toUnit);
@@ -152,7 +163,7 @@ export function UnitConverterView() {
                   <label className="text-sm font-medium opacity-70">Resultado</label>
                   <div className="flex bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[var(--primary)]">
                     <div className="w-full bg-transparent px-4 py-3 font-mono text-xl font-bold flex items-center overflow-x-auto">
-                      {result}
+                      {result || 'Pulsa Convertir'}
                     </div>
                     <select 
                       value={toUnit}
@@ -163,6 +174,17 @@ export function UnitConverterView() {
                     </select>
                   </div>
                </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={handleConvert}
+                disabled={!amount || Number.isNaN(parseFloat(amount))}
+                className="inline-flex items-center justify-center rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-[var(--bg)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Convertir
+              </button>
             </div>
           </Tabs.Content>
         </Tabs.Root>
