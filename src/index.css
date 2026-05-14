@@ -17,6 +17,12 @@
     --surface: #ffffff;
     --surface-hover: #f1f5f9;
     --border: #e2e8f0;
+    --app-background:
+      radial-gradient(circle at top left, rgba(99, 102, 241, 0.20), transparent 34%),
+      radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 32%),
+      radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.16), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.18), transparent 30%),
+      linear-gradient(155deg, #f8fafc 0%, #eef2ff 42%, #fdf2f8 72%, #fffbeb 100%);
   }
 
   .theme-dark {
@@ -27,6 +33,12 @@
     --surface: #1e293b;
     --surface-hover: #334155;
     --border: #334155;
+    --app-background:
+      radial-gradient(circle at top left, rgba(129, 140, 248, 0.24), transparent 34%),
+      radial-gradient(circle at top right, rgba(45, 212, 191, 0.18), transparent 30%),
+      radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.18), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.14), transparent 28%),
+      linear-gradient(150deg, #020617 0%, #0f172a 42%, #111827 72%, #1e1b4b 100%);
   }
   
   .theme-custom {
@@ -37,12 +49,15 @@
     --surface: var(--custom-surface, #1e293b);
     --surface-hover: var(--custom-surface-hover, #334155);
     --border: var(--custom-border, #334155);
+    --app-background: var(--custom-bg, #0f172a);
   }
 }
 
 body {
   margin: 0;
-  background-color: var(--bg);
+  background: var(--app-background);
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--text);
   font-family: var(--font-sans);
   overflow-x: hidden;
@@ -50,6 +65,12 @@ body {
 
 #root {
   min-height: 100dvh;
+}
+
+.app-shell {
+  background: var(--app-background);
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
