@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppStore } from './store/useAppStore';
+import { PwaUpdatePrompt } from './components/PwaUpdatePrompt';
 import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
 
@@ -56,6 +57,7 @@ export default function App() {
               </Routes>
             </Suspense>
           </main>
+          <PwaUpdatePrompt />
         </div>
       </div>
   );

@@ -13,7 +13,7 @@ export default defineConfig(() => {
       react(),
       tailwindcss(),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         injectRegister: 'auto',
         includeAssets: ['brand-icon.svg', 'apple-touch-icon.png'],
         manifest: {
