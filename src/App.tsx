@@ -20,10 +20,13 @@ export default function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('theme-dark', 'theme-custom');
+    root.classList.remove('theme-dark', 'theme-gradient', 'theme-custom');
+    root.removeAttribute('style');
     
     if (theme === 'dark') {
       root.classList.add('theme-dark');
+    } else if (theme === 'gradient') {
+      root.classList.add('theme-gradient');
     } else if (theme === 'custom') {
       root.classList.add('theme-custom');
       root.style.setProperty('--custom-bg', customThemeColors.bg);
@@ -33,8 +36,6 @@ export default function App() {
       root.style.setProperty('--custom-surface', customThemeColors.surface);
       root.style.setProperty('--custom-surface-hover', customThemeColors.surface + 'dd');
       root.style.setProperty('--custom-border', customThemeColors.primary + '55');
-    } else {
-      root.removeAttribute('style');
     }
   }, [theme, customThemeColors]);
 

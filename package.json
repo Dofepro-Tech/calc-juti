@@ -7,6 +7,7 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "build:pages": "node scripts/build-pages.mjs",
+    "generate:icons": "node scripts/generate-icons.mjs",
     "preview": "vite preview",
     "clean": "node -e \"const fs=require('node:fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.rmSync('server.js',{force:true});\"",
     "lint": "tsc --noEmit"
@@ -36,6 +37,7 @@
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
+    "sharp": "^0.34.2",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",

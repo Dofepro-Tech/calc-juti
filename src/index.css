@@ -17,12 +17,7 @@
     --surface: #ffffff;
     --surface-hover: #f1f5f9;
     --border: #e2e8f0;
-    --app-background:
-      radial-gradient(circle at top left, rgba(99, 102, 241, 0.20), transparent 34%),
-      radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 32%),
-      radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.16), transparent 34%),
-      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.18), transparent 30%),
-      linear-gradient(155deg, #f8fafc 0%, #eef2ff 42%, #fdf2f8 72%, #fffbeb 100%);
+    --app-background: #f8fafc;
   }
 
   .theme-dark {
@@ -33,12 +28,23 @@
     --surface: #1e293b;
     --surface-hover: #334155;
     --border: #334155;
+    --app-background: #020617;
+  }
+
+  .theme-gradient {
+    --bg: #eef4ff;
+    --text: #10203c;
+    --primary: #2563eb;
+    --accent: #06b6d4;
+    --surface: rgba(255, 255, 255, 0.82);
+    --surface-hover: rgba(255, 255, 255, 0.94);
+    --border: rgba(99, 102, 241, 0.18);
     --app-background:
-      radial-gradient(circle at top left, rgba(129, 140, 248, 0.24), transparent 34%),
-      radial-gradient(circle at top right, rgba(45, 212, 191, 0.18), transparent 30%),
-      radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.18), transparent 32%),
-      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.14), transparent 28%),
-      linear-gradient(150deg, #020617 0%, #0f172a 42%, #111827 72%, #1e1b4b 100%);
+      radial-gradient(circle at top left, rgba(37, 99, 235, 0.24), transparent 34%),
+      radial-gradient(circle at top right, rgba(45, 212, 191, 0.22), transparent 30%),
+      radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.20), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.20), transparent 28%),
+      linear-gradient(155deg, #eff6ff 0%, #dbeafe 26%, #f5f3ff 54%, #fdf2f8 76%, #fffbeb 100%);
   }
   
   .theme-custom {

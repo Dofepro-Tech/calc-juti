@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RefreshCcw } from 'lucide-react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
-const updateCheckIntervalMs = 5 * 60 * 1000;
+const serviceWorkerCheckIntervalMs = 5 * 60 * 1000;
+const versionCheckIntervalMs = 60 * 1000;
 let updateIntervalId: number | null = null;
 
+interface AppVersionInfo {
+  buildId?: string;
+  generatedAt?: string;
+}
+
 export function PwaUpdatePrompt() {
+  const [versionUpdateAvailable, setVersionUpdateAvailable] = useState(false);
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     offlineReady: [offlineReady, setOfflineReady],
@@ -20,9 +27,32 @@ export function PwaUpdatePrompt() {
         if (navigator.onLine) {
           registration.update();
         }
-      }, updateCheckIntervalMs);
+      }, serviceWorkerCheckIntervalMs);
     },
   });
+
+  const checkVersion = useCallback(async () => {
+    if (typeof window === 'undefined' || __APP_BUILD_ID__ === 'dev' || !navigator.onLine) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}app-version.json?ts=${Date.now()}`, {
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      const versionInfo = (await response.json()) as AppVersionInfo;
+      if (versionInfo.buildId && versionInfo.buildId !== __APP_BUILD_ID__) {
+        setVersionUpdateAvailable(true);
+      }
+    } catch (error) {
+      console.error('No se pudo comprobar la nueva version de la app.', error);
+    }
+  }, []);
 
   useEffect(() => {
     if (!offlineReady || typeof window === 'undefined') {
@@ -38,13 +68,58 @@ export function PwaUpdatePrompt() {
     };
   }, [offlineReady, setOfflineReady]);
 
-  if (!needRefresh && !offlineReady) {
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    void checkVersion();
+
+    const intervalId = window.setInterval(() => {
+      void checkVersion();
+    }, versionCheckIntervalMs);
+
+    const handleFocus = () => {
+      void checkVersion();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void checkVersion();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [checkVersion]);
+
+  const hasUpdate = needRefresh || versionUpdateAvailable;
+
+  if (!hasUpdate && !offlineReady) {
     return null;
   }
 
   const closePrompt = () => {
     setNeedRefresh(false);
     setOfflineReady(false);
+    setVersionUpdateAvailable(false);
+  };
+
+  const handleUpdate = async () => {
+    if (needRefresh) {
+      await updateServiceWorker(true);
+      return;
+    }
+
+    const registration = await navigator.serviceWorker?.getRegistration();
+    await registration?.update();
+    window.location.reload();
   };
 
   return (
@@ -56,11 +131,11 @@ export function PwaUpdatePrompt() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-semibold text-[var(--primary)]">
-              {needRefresh ? 'Nueva version disponible' : 'App lista para usar sin conexion'}
+              {hasUpdate ? 'Nueva version disponible' : 'App lista para usar sin conexion'}
             </div>
             <p className="mt-1 text-sm opacity-75">
-              {needRefresh
-                ? 'Hay una version nueva de Calc Juti lista para descargar e instalar. Pulsa actualizar para usarla ahora.'
+              {hasUpdate
+                ? 'Hay una version nueva de Calc Juti lista para descargar e instalar. Pulsa actualizar para usarla ahora en web, escritorio o app agregada al inicio.'
                 : 'Calc Juti ya puede abrirse como app instalada en este dispositivo.'}
             </p>
           </div>
@@ -72,12 +147,12 @@ export function PwaUpdatePrompt() {
             onClick={closePrompt}
             className="rounded-2xl border border-[var(--border)] px-4 py-2 text-sm font-medium transition-colors hover:bg-[var(--surface-hover)]"
           >
-            {needRefresh ? 'Despues' : 'Entendido'}
+            {hasUpdate ? 'Despues' : 'Entendido'}
           </button>
-          {needRefresh && (
+          {hasUpdate && (
             <button
               type="button"
-              onClick={() => updateServiceWorker(true)}
+              onClick={handleUpdate}
               className="rounded-2xl bg-[var(--primary)] px-4 py-2 text-sm font-bold text-[var(--bg)] transition-opacity hover:opacity-90"
             >
               Actualizar app

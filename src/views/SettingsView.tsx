@@ -47,6 +47,16 @@ export function SettingsView() {
                 <input 
                   type="radio" 
                   name="theme" 
+                  checked={theme === 'gradient'} 
+                  onChange={() => setTheme('gradient')}
+                  className="w-5 h-5 accent-[var(--primary)]"
+                />
+                <span className="font-medium">Tema Gradiente</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--surface-hover)] transition-colors">
+                <input 
+                  type="radio" 
+                  name="theme" 
                   checked={theme === 'custom'} 
                   onChange={() => setTheme('custom')}
                   className="w-5 h-5 accent-[var(--primary)]"
@@ -75,12 +85,14 @@ export function SettingsView() {
                         type="color" 
                         value={customThemeColors[key as keyof typeof customThemeColors]} 
                         onChange={(e) => setCustomThemeColors({ [key]: e.target.value })}
+                        aria-label={label}
                         className="w-12 h-12 p-0 border-0 outline-none cursor-pointer"
                       />
                       <input 
                         type="text" 
                         value={customThemeColors[key as keyof typeof customThemeColors]} 
                         onChange={(e) => setCustomThemeColors({ [key]: e.target.value })}
+                        aria-label={`${label} en hexadecimal`}
                         className="flex-1 bg-transparent px-3 text-sm font-mono outline-none uppercase"
                         spellCheck={false}
                       />
@@ -121,6 +133,7 @@ export function SettingsView() {
               <select 
                 value={precision}
                 onChange={(e) => setPrecision(Number(e.target.value))}
+                aria-label="Precision decimal"
                 className="bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] font-bold rounded-lg ml-4 px-2 py-1 max-w-[120px] outline-none text-sm"
               >
                 <option value={2}>2 Decimales</option>

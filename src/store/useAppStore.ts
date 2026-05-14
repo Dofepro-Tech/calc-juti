@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type ThemeType = 'light' | 'dark' | 'custom';
+export type ThemeType = 'light' | 'dark' | 'gradient' | 'custom';
 
 export interface CalculationRecord {
   id: string;
@@ -50,7 +50,7 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      theme: 'light',
+      theme: 'gradient',
       setTheme: (theme) => set({ theme }),
       customThemeColors: {
         bg: '#2d001c',
